@@ -24,8 +24,8 @@ const HeroSequence = () => {
 
     // DIRECT MAPPING - No Spring to remove "lag" or "float"
     // Lenis handles the smoothing of the scroll position itself.
-    // Map 0 -> 0.9 to start->end. Hold end frame for 0.9 -> 1.0
-    const frameIndex = useTransform(scrollYProgress, [0, 0.9], [startFrame, frameCount]);
+    // Map 0 -> 1.0 to ensure strict 1:1 scroll-to-frame mapping without premature unpinning
+    const frameIndex = useTransform(scrollYProgress, [0, 1], [startFrame, frameCount]);
 
     // Text Animations - STRICT SEQUENCING & NO OVERLAP
 
@@ -39,14 +39,14 @@ const HeroSequence = () => {
     const ySub = useTransform(scrollYProgress, [0, 0.15], [0, -30]);
 
     // Phase 2: Right Text (0.3 - 0.5) - "Quality you can afford"
-    // Enters from Right (x:100 -> 0), then Exit (opacity 1->0)
-    const opacityQuality = useTransform(scrollYProgress, [0.3, 0.35, 0.45, 0.5], [0, 1, 1, 0]);
-    const xQuality = useTransform(scrollYProgress, [0.3, 0.35, 0.5], [100, 0, -50]);
+    // Enters from Right (x:250 -> 0), then Exit (opacity 1->0)
+    const opacityQuality = useTransform(scrollYProgress, [0.3, 0.4, 0.5, 0.6], [0, 1, 1, 0]);
+    const xQuality = useTransform(scrollYProgress, [0.3, 0.4, 0.6], [500, 0, -100]);
 
     // Phase 3: Left Text (0.6 - 0.8) - "A Royal Legacy"
-    // Enters from Left (x:-100 -> 0), then Exit (opacity 1->0)
-    const opacityLegacy = useTransform(scrollYProgress, [0.6, 0.65, 0.75, 0.8], [0, 1, 1, 0]);
-    const xLegacy = useTransform(scrollYProgress, [0.6, 0.65, 0.8], [-100, 0, 50]);
+    // Enters from Left (x:-250 -> 0), then Exit (opacity 1->0)
+    const opacityLegacy = useTransform(scrollYProgress, [0.6, 0.7, 0.8, 0.9], [0, 1, 1, 0]);
+    const xLegacy = useTransform(scrollYProgress, [0.6, 0.7, 0.9], [-500, 0, 100]);
 
     // Phase 4: CTA (0.9 - 1.0)
     const opacityCTA = useTransform(scrollYProgress, [0.85, 0.9], [0, 1]);
@@ -179,7 +179,7 @@ const HeroSequence = () => {
     }
 
     return (
-        <div ref={containerRef} className="h-[350vh] relative bg-taj-black">
+        <div ref={containerRef} className="h-[1800vh] relative bg-taj-black">
             <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ width: '100%', height: '100%' }} />
 
