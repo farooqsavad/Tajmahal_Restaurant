@@ -24,7 +24,8 @@ const HeroSequence = () => {
 
     // DIRECT MAPPING - No Spring to remove "lag" or "float"
     // Lenis handles the smoothing of the scroll position itself.
-    const frameIndex = useTransform(scrollYProgress, [0, 1], [startFrame, frameCount]);
+    // Map 0 -> 0.9 to start->end. Hold end frame for 0.9 -> 1.0
+    const frameIndex = useTransform(scrollYProgress, [0, 0.9], [startFrame, frameCount]);
 
     // Text Animations - STRICT SEQUENCING & NO OVERLAP
 
@@ -48,8 +49,8 @@ const HeroSequence = () => {
     const xLegacy = useTransform(scrollYProgress, [0.6, 0.65, 0.8], [-100, 0, 50]);
 
     // Phase 4: CTA (0.9 - 1.0)
-    const opacityCTA = useTransform(scrollYProgress, [0.9, 0.95], [0, 1]);
-    const scaleCTA = useTransform(scrollYProgress, [0.9, 0.95], [0.9, 1]);
+    const opacityCTA = useTransform(scrollYProgress, [0.85, 0.9], [0, 1]);
+    const scaleCTA = useTransform(scrollYProgress, [0.85, 0.9], [0.9, 1]);
 
     useEffect(() => {
         const preloadImages = async () => {
@@ -178,7 +179,7 @@ const HeroSequence = () => {
     }
 
     return (
-        <div ref={containerRef} className="h-[450vh] relative bg-taj-black">
+        <div ref={containerRef} className="h-[700vh] relative bg-taj-black">
             <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ width: '100%', height: '100%' }} />
 
