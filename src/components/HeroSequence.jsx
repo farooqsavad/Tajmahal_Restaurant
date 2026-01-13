@@ -178,7 +178,7 @@ const HeroSequence = () => {
     }
 
     return (
-        <div ref={containerRef} className="h-[250vh] relative bg-taj-black">
+        <div ref={containerRef} className="h-[450vh] relative bg-taj-black">
             <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ width: '100%', height: '100%' }} />
 
