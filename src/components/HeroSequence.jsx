@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
 
-const frameCount = 147;
+const frameCount = 130;
+const startFrame = 25;
 const padding = 3;
 
-const currentFrame = (index) =>
-    `/biriyani/ezgif-frame-${index.toString().padStart(padding, '0')}.jpg`;
+const currentFrame = (index) => {
+    if (index === 25) return `/biriyani/frame_025_delay-0.033333333333333s.png`;
+    if (index === 130) return `/biriyani/frame_130_delay-0.033333333333333s.jpg`;
+    return `/biriyani/frame_${index.toString().padStart(padding, '0')}_delay-0.033333333333333s.avif`;
+};
 
 const HeroSequence = () => {
     const containerRef = useRef(null);
@@ -20,7 +24,7 @@ const HeroSequence = () => {
 
     // DIRECT MAPPING - No Spring to remove "lag" or "float"
     // Lenis handles the smoothing of the scroll position itself.
-    const frameIndex = useTransform(scrollYProgress, [0, 1], [1, frameCount]);
+    const frameIndex = useTransform(scrollYProgress, [0, 1], [startFrame, frameCount]);
 
     // Text Animations - STRICT SEQUENCING & NO OVERLAP
 
@@ -50,7 +54,8 @@ const HeroSequence = () => {
     useEffect(() => {
         const preloadImages = async () => {
             const promises = [];
-            for (let i = 1; i <= frameCount; i++) {
+            // Optimizing: only preload frames we will actually use (startFrame -> frameCount)
+            for (let i = startFrame; i <= frameCount; i++) {
                 const img = new Image();
                 img.src = currentFrame(i);
                 promises.push(
@@ -81,7 +86,11 @@ const HeroSequence = () => {
         const img = imagesRef.current[imgIndex];
         if (!img) return;
 
-        // High DPI Handling
+        // Quality settings
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        // High DPI Handling - Uncapped for maximum sharpness
         const dpr = window.devicePixelRatio || 1;
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -147,8 +156,12 @@ const HeroSequence = () => {
             }
         });
 
-        // Initial render
-        if (imagesLoaded) renderFrame(1);
+        // Initial render - ensure it runs even if there's a slight DOM delay
+        if (imagesLoaded) {
+            // Force a few renders to ensure canvas catches up
+            requestAnimationFrame(() => renderFrame(startFrame));
+            setTimeout(() => renderFrame(startFrame), 100);
+        }
 
         return () => {
             window.removeEventListener('resize', resizeCanvas);
@@ -165,58 +178,58 @@ const HeroSequence = () => {
     }
 
     return (
-        <div ref={containerRef} className="h-[1000vh] relative bg-taj-black">
-            <div className="sticky top-0 h-screen w-full overflow-hidden">
+        <div ref={containerRef} className="h-[250vh] relative bg-taj-black">
+            <div className="sticky top-0 h-[100dvh] w-full overflow-hidden">
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ width: '100%', height: '100%' }} />
 
-                {/* Cinematic Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-taj-black/90 via-transparent to-taj-black/40 pointer-events-none" />
-                <div className="absolute inset-0 bg-taj-amber/10 mix-blend-overlay pointer-events-none" />
+                {/* Cinematic Gradient Overlay - Adjusted to be less obscuring */}
+                <div className="absolute inset-0 bg-gradient-to-t from-taj-black/80 via-transparent to-taj-black/30 pointer-events-none" />
+                <div className="absolute inset-0 bg-taj-amber/5 mix-blend-overlay pointer-events-none" />
 
                 {/* Text 1: Center (Welcome) */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-4 pointer-events-none">
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-6 pointer-events-none">
                     <motion.h1
                         style={{ opacity: opacityHead, y: yHead }}
-                        className="font-serif text-5xl md:text-8xl text-white mb-6 tracking-tight drop-shadow-2xl"
+                        className="font-serif text-3xl md:text-6xl lg:text-8xl text-white mb-4 md:mb-6 tracking-tight drop-shadow-2xl"
                     >
                         The Art of <span className="text-taj-gold italic">Biriyani</span>
                     </motion.h1>
 
                     <motion.p
                         style={{ opacity: opacitySub, y: ySub }}
-                        className="font-sans text-taj-sandalwood text-sm md:text-lg tracking-[0.3em] uppercase max-w-xl leading-loose"
+                        className="font-sans text-taj-sandalwood text-xs md:text-lg tracking-[0.2em] md:tracking-[0.3em] uppercase max-w-[80vw] md:max-w-xl leading-loose"
                     >
                         Welcome to Taj Mahal
                     </motion.p>
                 </div>
 
                 {/* Text 2: Right (Quality) */}
-                <div className="absolute inset-0 flex items-center justify-end z-10 px-10 md:px-20 pointer-events-none">
+                <div className="absolute inset-0 flex items-center justify-end z-10 px-6 md:px-20 pointer-events-none">
                     <motion.div
                         style={{ opacity: opacityQuality, x: xQuality }}
-                        className="text-right max-w-md"
+                        className="text-right max-w-[70vw] md:max-w-md"
                     >
-                        <h2 className="font-serif text-4xl md:text-6xl text-white mb-4 leading-tight">
+                        <h2 className="font-serif text-2xl md:text-5xl lg:text-6xl text-white mb-2 md:mb-4 leading-tight">
                             Quality you <br /> can <span className="text-taj-gold">afford</span>.
                         </h2>
-                        <div className="w-full h-[1px] bg-gradient-to-l from-taj-gold to-transparent mb-4"></div>
-                        <p className="font-sans text-taj-sandalwood text-sm tracking-widest uppercase opacity-80">
+                        <div className="w-full h-[1px] bg-gradient-to-l from-taj-gold to-transparent mb-2 md:mb-4"></div>
+                        <p className="font-sans text-taj-sandalwood text-xs md:text-sm tracking-widest uppercase opacity-80">
                             Uncompromised taste.
                         </p>
                     </motion.div>
                 </div>
 
                 {/* Text 3: Left (Legacy) */}
-                <div className="absolute inset-0 flex items-center justify-start z-10 px-10 md:px-20 pointer-events-none">
+                <div className="absolute inset-0 flex items-center justify-start z-10 px-6 md:px-20 pointer-events-none">
                     <motion.div
                         style={{ opacity: opacityLegacy, x: xLegacy }}
-                        className="text-left max-w-md"
+                        className="text-left max-w-[70vw] md:max-w-md"
                     >
-                        <h2 className="font-serif text-4xl md:text-6xl text-white mb-4 leading-tight">
+                        <h2 className="font-serif text-2xl md:text-5xl lg:text-6xl text-white mb-2 md:mb-4 leading-tight">
                             A Royal <br /> <span className="text-taj-gold">Legacy</span>
                         </h2>
-                        <div className="w-full h-[1px] bg-gradient-to-r from-taj-gold to-transparent mb-4"></div>
-                        <p className="font-sans text-taj-sandalwood text-sm tracking-widest uppercase opacity-80">
+                        <div className="w-full h-[1px] bg-gradient-to-r from-taj-gold to-transparent mb-2 md:mb-4"></div>
+                        <p className="font-sans text-taj-sandalwood text-xs md:text-sm tracking-widest uppercase opacity-80">
                             Slow cooked to perfection.
                         </p>
                     </motion.div>
@@ -225,11 +238,11 @@ const HeroSequence = () => {
                 {/* Second Text Phase / CTA at the end of the scroll */}
                 <motion.div
                     style={{ opacity: opacityCTA, scale: scaleCTA }}
-                    className="absolute bottom-20 left-0 right-0 flex justify-center z-20"
+                    className="absolute bottom-10 md:bottom-20 left-0 right-0 flex justify-center z-20"
                 >
-                    <button className="group relative bg-transparent border border-taj-gold/50 px-10 py-4 overflow-hidden rounded-full transition-all hover:border-taj-gold hover:shadow-[0_0_30px_rgba(212,175,55,0.3)]">
+                    <button className="group relative bg-transparent border border-taj-gold/50 px-6 py-3 md:px-10 md:py-4 overflow-hidden rounded-full transition-all hover:border-taj-gold hover:shadow-[0_0_30px_rgba(212,175,55,0.3)]">
                         <div className="absolute inset-0 w-0 bg-taj-gold transition-all duration-[250ms] ease-out group-hover:w-full opacity-10"></div>
-                        <span className="relative font-serif text-taj-gold text-xl tracking-widest">RESERVE A TABLE</span>
+                        <span className="relative font-serif text-taj-gold text-sm md:text-xl tracking-widest">RESERVE A TABLE</span>
                     </button>
                 </motion.div>
             </div>

@@ -7,10 +7,11 @@ import DishGallery from './components/DishGallery';
 function App() {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 2.0, // Slow, smooth cinematic scroll
+      duration: 1.5, // Slightly faster than 2.0 for better response
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      smoothTouch: false, // Default
+      smoothTouch: true, // Enable for mobile to fix "floppy" feel
+      touchMultiplier: 1.5, // Better touch tracking
     });
 
     function raf(time) {
