@@ -193,14 +193,14 @@ const HeroSequence = () => {
                         style={{ opacity: opacityHead, y: yHead }}
                         className="font-serif text-3xl md:text-6xl lg:text-8xl text-white mb-4 md:mb-6 tracking-tight drop-shadow-2xl"
                     >
-                        The Art of <span className="text-taj-gold italic">Biriyani</span>
+                        The Art of <span className="text-taj-gold italic">Mandi</span>
                     </motion.h1>
 
                     <motion.p
                         style={{ opacity: opacitySub, y: ySub }}
                         className="font-sans text-taj-sandalwood text-xs md:text-lg tracking-[0.2em] md:tracking-[0.3em] uppercase max-w-[80vw] md:max-w-xl leading-loose"
                     >
-                        Welcome to Taj Mahal
+                        Welcome to Mandi Palace
                     </motion.p>
                 </div>
 

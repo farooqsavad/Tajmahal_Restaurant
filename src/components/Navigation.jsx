@@ -28,7 +28,7 @@ const Navigation = () => {
                 <div
                     className="text-taj-gold font-serif text-2xl font-bold tracking-widest cursor-pointer"
                 >
-                    TAJ MAHAL
+                    MANDI PALACE
                     <span className="block text-[10px] font-sans text-taj-sandalwood tracking-[0.3em] uppercase opacity-80">
                         Vandanam
                     </span>

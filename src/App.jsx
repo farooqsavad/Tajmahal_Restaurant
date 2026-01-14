@@ -49,7 +49,7 @@ function App() {
       </section>
 
       <footer id="contact" className="bg-taj-black py-20 border-t border-taj-gold/20 text-center">
-        <div className="font-serif text-3xl text-taj-gold mb-4">TAJ MAHAL</div>
+        <div className="font-serif text-3xl text-taj-gold mb-4">MANDI PALACE</div>
         <div className="font-sans text-taj-sandalwood text-xs tracking-[0.3em] uppercase opacity-60">Vandanam</div>
       </footer>
     </main>
